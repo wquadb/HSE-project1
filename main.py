@@ -1,6 +1,9 @@
-import pandas as pd
-import argparse
+import os
 from typing import List, Dict
+import argparse
+
+import pandas as pd
+
 
 def open_file(path:str) -> list[list[object]]:
     df = pd.read_csv(path)
@@ -16,7 +19,6 @@ def get_y_stats(table: list[list[object]]) -> dict:
     }
     """
     result = {}
-    b = 2010
     for i in table:
         if i[1] not in result:
             result[i[1]] = 1
@@ -24,9 +26,39 @@ def get_y_stats(table: list[list[object]]) -> dict:
             result[i[1]] += 1
     return result
 
+def sort_y_stats(main: dict, frm, to) -> dict:
+    res = {}
+    for i in main:
+        if i in range(frm,to+1):
+            res[i] = main[i]
+    return res
+
+def present(main: dict):
+    print('{')
+    for i in main:
+        print(f'   {i}: {main[i]},') 
+    print('}')
+    return 0
+
 def get_most_mentioned_artist(table: List[List[object]]) -> str:
-    
-    return
+    result = {}
+    for i in table:
+        if i[6] not in result:
+            result[i[6]] = 1
+        else:
+            result[i[6]] += 1
+    point = max(result.values())
+    most_ment = []
+    for i in result:
+        if result[i] == point:
+            most_ment.append(i)
+
+    popular = []
+    for i in table:
+        if i[6] in most_ment:
+            if i[7] not in popular:
+                popular.append(i[7])
+    return popular
 
 
 if __name__ == "__main__":
@@ -39,6 +71,23 @@ if __name__ == "__main__":
 
     table = open_file(args.file_path)
 
-    print(get_y_stats(table=table))
+    print(f"type '1' - to get the most mentioned artist in the database: {args.file_path}")
+    print(f"type '2' - to get the amount of songs released in each i-th year, from x-year to y-year in the database: {args.file_path}")
+    print("type '3' - if you want both")
+    response = int(input())
 
+    if response > 1:
+        os.system("clear")
+        print("Amount of songs released in each year\n")
+        yearstart = int(input("input year to start from\n"))
+        yearend = int(input("input year to stop\n"))
+        os.system("clear")
+        data = sort_y_stats(get_y_stats(table=table), yearstart, yearend)
+        present(data)
+        print()
 
+    if response == 1 or response == 3:
+        if response == 1: os.system("clear")
+        most_mentioned_artist = get_most_mentioned_artist(table=table)
+        print("Most mentioned artist(-s):")
+        print(most_mentioned_artist)
