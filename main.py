@@ -69,9 +69,7 @@ if __name__ == "__main__":
 
     parser.add_argument("-m", "--most", action="store_true")
 
-    parser.add_argument("-s", "--stats", action="store_true")
-
-    parser.add_argument("-y", "--year", type=int)
+    parser.add_argument("-s", "--stats", type=int)
 
     args = parser.parse_args()
 
@@ -81,17 +79,15 @@ if __name__ == "__main__":
 
     if args.stats:
 
-        yearstart = args.year
-        yearend = 2023
+        yearstart = args.stats
         
-        data = sort_y_stats(get_y_stats(table=table), yearstart, yearend)
+        data = sort_y_stats(get_y_stats(table=table), yearstart, 2023)
+        
         present(data)
-
-        print()
 
     if args.most:
 
-        print("Most mentioned artist(-s):")
+        print("\nMost mentioned artist(-s):")
         
         print(get_most_mentioned_artist(table=table))
-        
+
