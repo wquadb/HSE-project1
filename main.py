@@ -67,27 +67,30 @@ if __name__ == "__main__":
 
     parser.add_argument("file_path", type=str, help="input path here")
 
+    parser.add_argument("-m", "--most", action="store_true")
+
+    parser.add_argument("-s", "--stats", action="store_true")
+
     args = parser.parse_args()
 
     table = open_file(args.file_path)
 
-    print(f"type '1' - to get the most mentioned artist in the database: {args.file_path}")
-    print(f"type '2' - to get the amount of songs released in each i-th year, from x-year to y-year in the database: {args.file_path}")
-    print("type '3' - if you want both")
-    response = int(input())
+    if args.stats:
 
-    if response > 1:
         os.system("clear")
+
         print("Amount of songs released in each year\n")
+
         yearstart = int(input("input year to start from\n"))
         yearend = int(input("input year to stop\n"))
+
         os.system("clear")
+        
         data = sort_y_stats(get_y_stats(table=table), yearstart, yearend)
         present(data)
+
         print()
 
-    if response == 1 or response == 3:
-        if response == 1: os.system("clear")
-        most_mentioned_artist = get_most_mentioned_artist(table=table)
+    if args.most:
         print("Most mentioned artist(-s):")
-        print(most_mentioned_artist)
+        print(get_most_mentioned_artist(table=table))
