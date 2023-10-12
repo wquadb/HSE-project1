@@ -71,20 +71,18 @@ if __name__ == "__main__":
 
     parser.add_argument("-s", "--stats", action="store_true")
 
+    parser.add_argument("-y", "--year", type=int)
+
     args = parser.parse_args()
 
     table = open_file(args.file_path)
 
+    os.system("clear")
+
     if args.stats:
 
-        os.system("clear")
-
-        print("Amount of songs released in each year\n")
-
-        yearstart = int(input("input year to start from\n"))
-        yearend = int(input("input year to stop\n"))
-
-        os.system("clear")
+        yearstart = args.year
+        yearend = 2023
         
         data = sort_y_stats(get_y_stats(table=table), yearstart, yearend)
         present(data)
@@ -92,5 +90,8 @@ if __name__ == "__main__":
         print()
 
     if args.most:
+
         print("Most mentioned artist(-s):")
+        
         print(get_most_mentioned_artist(table=table))
+        
